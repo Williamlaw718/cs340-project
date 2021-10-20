@@ -1,6 +1,7 @@
 import re
 import os
 import sys
+from scheduler import scheduler
 
 def main():
 
@@ -16,7 +17,10 @@ def main():
 
         room_sizes= []
         for i in range(2, 2+num_rooms):
-            room_sizes.append(int(constraints[i].split()[-1]))
+            room_sizes.append((i, int(constraints[i].split()[-1])))
+
+        # remember to plus 1
+        room_sizes.sort(key = lambda x : x[1], reverse = True)
 
         # after end of room and their sizes
         num_classes= int(constraints[2+num_rooms].split()[-1])
@@ -30,7 +34,6 @@ def main():
 
 
 
-
     # this is reading the student preferences
     student_pref= []
     with open(sys.argv[2], 'r') as file:
@@ -40,19 +43,8 @@ def main():
             for pref in s_pref.split()[1:]:
                 cur_s_pref.append(int(pref))
             student_pref.append(cur_s_pref)
-    print(num_timeslots)
-    print(num_rooms)
-    print(room_sizes)
-    print(num_classes)
-    print(num_teachers)
-    print(class_to_teacher)
-    print(student_pref)
 
-
-
-
-
-    schedule_output= sys.argv[3]
+    scheduler(room_sizes, num_timeslots, num_classes, student_pref, class_to_teacher)
 
 if __name__ == "__main__":
 
