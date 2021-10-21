@@ -29,7 +29,6 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
             # if a professor is already teaching at this timeslot, move on to the next most popular class
             for pSlots in pTimeslots[schedule[cur_class_id].teacher-1]:
                 if pSlots == timeslot:
-                    print("Teacher: %d; timeslot: %d; already teach at ts: %d" % (schedule[cur_class_id].teacher, timeslot, pSlots))
                     break
             else:
                 # if the professor passes, then we assign the class to the timeslot and room
