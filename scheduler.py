@@ -11,25 +11,55 @@ class Classes:
         self.stu_list= 0
 
     def assignStudents(self, stu_list, timeslot, room):
-        self.stu_list= stu_list
+        self.stu_list= stu_list # need to add 1 to the students when we print out the statement
         self.prefVal= len(stu_list)
         self.timeslot= timeslot+1
         self.room= room+1
         # once we assign this, we will never reassign because greedy
 
 
-def assignClass(room, timeslot, student_pref_list, schedule, tsClasses, sClasses, P):
-    print(tsClasses)
-    if len(tsClasses[timeslot]) == 0:
-        cur_class_id= student_pref_list[0][0]
-        schedule[cur_class_id].assignStudents(student_pref_list[0][1], timeslot, room[0])
-        tsClasses[timeslot].append(cur_class_id)
 
-        # students who will be taking the assigned class
-        for student in student_pref_list[0][1]:
-            sClasses[student-1].append(cur_class_id)
+def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots, P):
 
-        return student_pref_list[1:]
+    # we delete elements from student_pref_list, so we will only iterate if there is an available class
+    if (len(student_pref_list) != 0):
+        for i in range(len(student_pref_list)):
+            cur_class_id= student_pref_list[i][0]
+
+            # if a professor is already teaching at this timeslot, move on to the next most popular class
+            for pSlots in pTimeslots[schedule[cur_class_id].teacher-1]:
+                if pSlots == timeslot:
+                    continue
+
+            # if the professor passes, then we assign the class to the timeslot and room
+            pTimeslots[schedule[cur_class_id].teacher-1].append(cur_class_id)
+
+            # need to check if each student can take the course
+            idx= 0
+            for j in range(len(student_pref_list[i][1])):
+
+                for time in sTimeslots[student_pref_list[i][1][idx]]: # at most 3
+                    if time == timeslot:
+                        student_pref_list[i][1].pop(idx) # remove student from the class to finalize class in schedule
+                        break # then we do not check anymore and go onto the next student
+                else:
+                    idx+= 1
+
+            # if the number of students exceed room size, then we s
+            if (len(student_pref_list[i][1]) > room[1]):
+                student_pref_list[i][1]= student_pref_list[i][1][:room[1]]
+
+            # adds this timeslot to the student's schedule at student_pref_list[i][1][j]
+            for j in range(len(student_pref_list[i][1])):
+                sTimeslots[student_pref_list[i][1][j]].append(timeslot)
+                student_pref_list[i][1][j]+= 1
+
+
+            schedule[cur_class_id].assignStudents(student_pref_list[i][1], timeslot, room[0])
+
+            student_pref_list.pop(i)
+
+            return
 
     return
 
@@ -55,17 +85,27 @@ def scheduler(R, T, C, S, P):
     classes_of_student_pref.sort(key= lambda x: len(x[1]), reverse = True)
 
     # list of classes at each timeslot
-    tsClasses= []
-    for i in range(T):
-        tsClasses.append([])
+    pTimeslots= []
+    for i in range(len(P)//2):
+        pTimeslots.append([])
     # list of classes a student takes
-    sClasses= []
+    sTimeslots= []
     for i in range(len(S)):
-        sClasses.append([])
+        sTimeslots.append([])
 
     for room in R:
         for i in range(T):
-            classes_of_student_pref= assignClass(room, i, classes_of_student_pref, finalized_schedule, tsClasses, sClasses, P)
+            assignClass(room, i, classes_of_student_pref, finalized_schedule, pTimeslots, sTimeslots, P)
 
+    sumPrefVal= 0
+    bestPrefVal= len(S)*4
     for c in finalized_schedule:
-        print(str(c.ID) + " " + str(c.stu_list))
+        sumPrefVal+= c.prefVal
+        print("Class ID: " + str(c.ID+1))
+        print("Room  ID: " + str(c.room))
+        print("Timeslot: " + str(c.timeslot))
+        print("Preference Value: " + str(c.prefVal))
+        print("Students: " + str(c.stu_list))
+
+    print("\nAlgo Preference Value: " + str(sumPrefVal))
+    print("Best Preference Value: " + str(bestPrefVal))
