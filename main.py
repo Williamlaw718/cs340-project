@@ -17,7 +17,7 @@ def main():
 
         room_sizes= []
         for i in range(2, 2+num_rooms):
-            room_sizes.append((i, int(constraints[i].split()[-1])))
+            room_sizes.append((i-2, int(constraints[i].split()[-1])))
 
         # remember to plus 1
         room_sizes.sort(key = lambda x : x[1], reverse = True)
@@ -44,7 +44,17 @@ def main():
                 cur_s_pref.append(int(pref))
             student_pref.append(cur_s_pref)
 
-    scheduler(room_sizes, num_timeslots, num_classes, student_pref, class_to_teacher)
+    schedule= scheduler(room_sizes, num_timeslots, num_classes, student_pref, class_to_teacher)
+
+    with open(sys.argv[3], 'a') as file:
+        file.write("{}\t{}\t{}\t{}\t{}\n".format("Course", "Room", "Teacher", "Time", "Students"))
+        for c in schedule:
+            students= ""
+            for s in c.stu_list:
+                students= students + str(s) + " "
+            file.write("{}\t{}\t{}\t{}\t{}\n".format(c.ID+1, c.room, c.teacher, c.timeslot, students))
+
+
 
 if __name__ == "__main__":
 

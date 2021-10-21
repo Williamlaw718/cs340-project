@@ -29,37 +29,38 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
             # if a professor is already teaching at this timeslot, move on to the next most popular class
             for pSlots in pTimeslots[schedule[cur_class_id].teacher-1]:
                 if pSlots == timeslot:
-                    continue
+                    print("Teacher: %d; timeslot: %d; already teach at ts: %d" % (schedule[cur_class_id].teacher, timeslot, pSlots))
+                    break
+            else:
+                # if the professor passes, then we assign the class to the timeslot and room
+                pTimeslots[schedule[cur_class_id].teacher-1].append(timeslot)
 
-            # if the professor passes, then we assign the class to the timeslot and room
-            pTimeslots[schedule[cur_class_id].teacher-1].append(cur_class_id)
+                # need to check if each student can take the course
+                idx= 0
+                for j in range(len(student_pref_list[i][1])):
 
-            # need to check if each student can take the course
-            idx= 0
-            for j in range(len(student_pref_list[i][1])):
+                    for time in sTimeslots[student_pref_list[i][1][idx]]: # at most 3
+                        if time == timeslot:
+                            student_pref_list[i][1].pop(idx) # remove student from the class to finalize class in schedule
+                            break # then we do not check anymore and go onto the next student
+                    else:
+                        idx+= 1
 
-                for time in sTimeslots[student_pref_list[i][1][idx]]: # at most 3
-                    if time == timeslot:
-                        student_pref_list[i][1].pop(idx) # remove student from the class to finalize class in schedule
-                        break # then we do not check anymore and go onto the next student
-                else:
-                    idx+= 1
+                # if the number of students exceed room size, then we s
+                if (len(student_pref_list[i][1]) > room[1]):
+                    student_pref_list[i][1]= student_pref_list[i][1][:room[1]]
 
-            # if the number of students exceed room size, then we s
-            if (len(student_pref_list[i][1]) > room[1]):
-                student_pref_list[i][1]= student_pref_list[i][1][:room[1]]
-
-            # adds this timeslot to the student's schedule at student_pref_list[i][1][j]
-            for j in range(len(student_pref_list[i][1])):
-                sTimeslots[student_pref_list[i][1][j]].append(timeslot)
-                student_pref_list[i][1][j]+= 1
+                # adds this timeslot to the student's schedule at student_pref_list[i][1][j]
+                for j in range(len(student_pref_list[i][1])):
+                    sTimeslots[student_pref_list[i][1][j]].append(timeslot)
+                    student_pref_list[i][1][j]+= 1
 
 
-            schedule[cur_class_id].assignStudents(student_pref_list[i][1], timeslot, room[0])
+                schedule[cur_class_id].assignStudents(student_pref_list[i][1], timeslot, room[0])
 
-            student_pref_list.pop(i)
+                student_pref_list.pop(i)
 
-            return
+                return
 
     return
 
@@ -106,6 +107,11 @@ def scheduler(R, T, C, S, P):
         print("Timeslot: " + str(c.timeslot))
         print("Preference Value: " + str(c.prefVal))
         print("Students: " + str(c.stu_list))
+        print("Teacher: " + str(c.teacher))
+        print()
 
     print("\nAlgo Preference Value: " + str(sumPrefVal))
     print("Best Preference Value: " + str(bestPrefVal))
+    print("Percent Preference Score: %d" % (sumPrefVal/bestPrefVal*100) )
+
+    return finalized_schedule
