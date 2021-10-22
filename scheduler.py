@@ -101,13 +101,13 @@ def scheduler(R, T, C, S, P):
     bestPrefVal= len(S)*4
     for c in finalized_schedule:
         sumPrefVal+= c.prefVal
-        print("Class ID: " + str(c.ID+1))
-        print("Room  ID: " + str(c.room))
-        print("Timeslot: " + str(c.timeslot))
-        print("Preference Value: " + str(c.prefVal))
-        print("Students: " + str(c.stu_list))
-        print("Teacher: " + str(c.teacher))
-        print()
+    #    print("Class ID: " + str(c.ID+1))
+    #    print("Room  ID: " + str(c.room))
+    #    print("Timeslot: " + str(c.timeslot))
+    #    print("Preference Value: " + str(c.prefVal))
+    #    print("Students: " + str(c.stu_list))
+    #    print("Teacher: " + str(c.teacher))
+    #    print()
 
     print("\nAlgo Preference Value: " + str(sumPrefVal))
     print("Best Preference Value: " + str(bestPrefVal))

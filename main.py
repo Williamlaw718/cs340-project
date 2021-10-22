@@ -1,6 +1,7 @@
 import re
 import os
 import sys
+import time
 from scheduler import scheduler
 
 def main():
@@ -44,12 +45,19 @@ def main():
                 cur_s_pref.append(int(pref))
             student_pref.append(cur_s_pref)
 
+
+    start_time= time.time()
+
     schedule= scheduler(room_sizes, num_timeslots, num_classes, student_pref, class_to_teacher)
 
-    with open(sys.argv[3], 'a') as file:
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+    with open(sys.argv[3], 'w') as file:
         file.write("{}\t{}\t{}\t{}\t{}\n".format("Course", "Room", "Teacher", "Time", "Students"))
         for c in schedule:
             students= ""
+            if c.room == -1:
+                continue
             for s in c.stu_list:
                 students= students + str(s) + " "
             file.write("{}\t{}\t{}\t{}\t{}\n".format(c.ID+1, c.room, c.teacher, c.timeslot, students))
