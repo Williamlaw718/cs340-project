@@ -84,11 +84,11 @@ def scheduler(R, T, C, S, P):
 
     classes_of_student_pref.sort(key= lambda x: len(x[1]), reverse = True)
 
-    # list of classes at each timeslot
+    # list of professors and the timeslots they were already assigned
     pTimeslots= []
     for i in range(len(P)//2):
         pTimeslots.append([])
-    # list of classes a student takes
+    # list of students and the timeslots they were already assigned
     sTimeslots= []
     for i in range(len(S)):
         sTimeslots.append([])
