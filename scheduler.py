@@ -25,7 +25,7 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
     for i in range(len(student_pref_list)):
         cur_class_id= student_pref_list[i][0]
 
-            # if a professor is already teaching at this timeslot, move on to the next most popular class
+        # if a professor is already teaching at this timeslot, move on to the next most popular class
         for pSlots in pTimeslots[schedule[cur_class_id].teacher-1]:
             if pSlots == timeslot:
                 break
@@ -85,7 +85,7 @@ def scheduler(R, T, C, S, P):
 
     # list of professors and the timeslots they were already assigned
     pTimeslots= []
-    for i in range(len(P)//2):
+    for i in range(len(P)):
         pTimeslots.append([])
     # list of students and the timeslots they were already assigned
     sTimeslots= []
