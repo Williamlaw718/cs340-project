@@ -36,9 +36,9 @@ def main_modified():
         convert_prof_ID = {}
         for i in range(4+num_rooms, len(constraints)):
             if int(constraints[i].split()[1]) in convert_prof_ID: # means we have already considered this professor
-                class_teacher_subject.append((convert_prof_ID[int(constraints[i].split()[1])], constraints[i].split()[2]))
+                class_teacher_subject.append([convert_prof_ID[int(constraints[i].split()[1])], constraints[i].split()[2], constraints[i].split()[3:]])
             else: # need to add a new professor
-                class_teacher_subject.append((pID, constraints[i].split()[2]))
+                class_teacher_subject.append([pID, constraints[i].split()[2], constraints[i].split()[3:]])
                 convert_prof_ID[int(constraints[i].split()[1])]= pID
                 pID+= 1
             convert_class_ID[int(constraints[i].split()[0])] = cID
