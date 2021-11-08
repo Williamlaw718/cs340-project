@@ -46,7 +46,8 @@ def get_student_prefs_enrolled(list_of_dicts):
     room = dict["Facil ID 1"]
     if status == "E" and room != "":
       if student in student_prefs:
-        student_prefs[student].append(course)
+        if course not in student_prefs[student]:
+            student_prefs[student].append(course)
       else:
         student_prefs[student] = [course]
   return student_prefs
@@ -70,7 +71,8 @@ def get_building(list_of_dicts):
     if room == None or room == "":
       continue
     if subject in building:
-        building[subject].append(room)
+        if room not in building[subject]:
+            building[subject].append(room)
     else:
         building[subject] = [room]
   return building
@@ -198,7 +200,7 @@ def write_teachers_to_file(list_of_dicts, f):
   for course in courses:
     f.write(course + "\t")
     f.write(courses[course]["Instructor ID"] + "\t")
-    f.write(subject_level[course][0] + "\t")
+    f.write(subject_level[course][0] + subject_level[course][1] + "\t")
     for b in building[subject_level[course][0]]:
         f.write(b + "\t")
     f.write("\n")
