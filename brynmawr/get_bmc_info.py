@@ -180,6 +180,9 @@ def write_class_times_to_file(list_of_dicts, f):
     f.write(str(i) + "\t" + start + " " + end + " " + days + "\n")
     i = i + 1
 
+def write_set_timeslots_to_file(f):
+    f.write("Class Times\t" + str(17) + "\n")
+
 def write_rooms_to_file(list_of_dicts, f):
   room_capacities = get_room_sizes(list_of_dicts)
   f.write("Rooms\t" + str(len(room_capacities)) + "\n")
@@ -207,7 +210,8 @@ def write_teachers_to_file(list_of_dicts, f):
 
 def write_constraints_to_file(list_of_dicts, filename):
   f = open(filename, 'w')
-  write_class_times_to_file(list_of_dicts, f)
+  #write_class_times_to_file(list_of_dicts, f)
+  write_set_timeslots_to_file(f)
   write_rooms_to_file(list_of_dicts, f)
   write_num_classes_to_file(list_of_dicts, f)
   write_teachers_to_file(list_of_dicts, f)

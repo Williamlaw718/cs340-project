@@ -55,7 +55,8 @@ def main_modified():
         for s_pref in file.readlines()[1:]:
             cur_s_pref= []
             for pref in s_pref.split()[1:]:
-                cur_s_pref.append(convert_class_ID[int(pref)])
+                if int(pref) in convert_class_ID: # does not take into account classes with no teachers
+                    cur_s_pref.append(convert_class_ID[int(pref)])
             student_pref.append(cur_s_pref)
 
 

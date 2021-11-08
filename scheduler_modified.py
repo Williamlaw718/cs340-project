@@ -122,6 +122,6 @@ def scheduler_modified(R, T, C, S, P):
 
     print("\nAlgo Preference Value: " + str(sumPrefVal))
     print("Best Preference Value: " + str(bestPrefVal))
-    print("Percent Preference Score: %d" % (sumPrefVal/bestPrefVal*100) )
+    print("Percent Preference Score: " + str((float(sumPrefVal)/float(bestPrefVal)*float(100))))
 
     return finalized_schedule
