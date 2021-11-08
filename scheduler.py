@@ -1,5 +1,3 @@
-
-
 class Classes:
 
     def __init__(self, ID, teacher):
