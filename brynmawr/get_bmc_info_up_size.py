@@ -43,6 +43,7 @@ def get_student_prefs_enrolled(list_of_dicts):
   student_prefs = {}
   for dict in list_of_dicts:
     student = dict["Student ID"]
+    prof = dict["Instructor ID"]
     course = dict["Course ID"]
     status = dict["Status"]
     room = dict["Facil ID 1"]
