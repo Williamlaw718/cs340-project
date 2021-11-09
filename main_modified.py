@@ -67,14 +67,14 @@ def main_modified():
     print("--- %s seconds ---" % (time.time() - start_time))
 
     with open(sys.argv[3], 'w') as file:
-        file.write("{}\t{}\t{}\t{}\t{}\n".format("Course", "Room", "Teacher", "Time", "Students"))
+        file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format("Course", "Subject", "Room", "Teacher", "Time", "Students"))
         for c in schedule:
             students= ""
             if c.room == -1:
                 continue
             for s in c.stu_list:
                 students= students + str(s) + " "
-            file.write("{}\t{}\t{}\t{}\t{}\n".format(c.ID+1, c.room, c.teacher, c.timeslot, students))
+            file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(c.ID+1, c.subject, c.room, c.teacher, c.timeslot, students))
 
 
 

@@ -22,6 +22,9 @@ class Classes:
     def viable(self, room):
         return room in self.viableRooms
 
+    def getLevel(self):
+        return subject[-1]
+
 
 
 def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots):
@@ -30,8 +33,8 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
     for i in range(len(student_pref_list)):
         cur_class_id= student_pref_list[i][0]
 
-        if not schedule[cur_class_id].viable(room[0]): # this makes it so we have to assign a viable class
-            continue
+        #if not schedule[cur_class_id].viable(room[0]): # this makes it so we have to assign a viable class
+        #    continue
 
 
 
