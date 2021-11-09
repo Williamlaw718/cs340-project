@@ -23,22 +23,25 @@ class Classes:
         return room in self.viableRooms
 
     def getLevel(self):
-        return subject[-1]
+        return self.subject[-1]
 
     def getSubject(self):
-        return subject[:len(self.subject)-1]
+        return self.subject[:len(self.subject)-1]
 
 
 
-def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots):
+def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots, tSubjects):
 
     # we delete elements from student_pref_list, so we will only iterate if there is an available class
     for i in range(len(student_pref_list)):
         cur_class_id= student_pref_list[i][0]
 
-        if not schedule[cur_class_id].viable(room[0]): # this makes it so we have to assign a viable class
-            continue
+        # comment out this if statement to remove room constraint
+        #if not schedule[cur_class_id].viable(room[0]): # this makes it so we have to assign a viable class
+        #    continue
 
+        if schedule[cur_class_id].getSubject() in tSubjects[timeslot]:
+            continue
 
 
         # if a professor is already teaching at this timeslot, move on to the next most popular class
@@ -48,6 +51,9 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
         else:
             # if the professor passes, then we assign the class to the timeslot and room
             pTimeslots[schedule[cur_class_id].teacher-1].append(timeslot)
+
+            # at this timeslot append to tSubject the subject of this class
+            tSubjects[timeslot].append(schedule[cur_class_id].getSubject())
 
             # need to check if each student can take the course
             idx= 0
@@ -110,9 +116,16 @@ def scheduler_modified(R, T, C, S, P):
     for i in range(len(S)):
         sTimeslots.append([])
 
+    # comment this out to remove timeslot constraint
+    tSubjects = []
+    for i in range(T):
+        tSubjects.append([]) # each time we assign a class we'll update the subjects in the timeslot
+
     for room in R:
         for i in range(T):
-            assignClass(room, i, classes_of_student_pref, finalized_schedule, pTimeslots, sTimeslots)
+            assignClass(room, i, classes_of_student_pref, finalized_schedule, pTimeslots, sTimeslots, tSubjects)
+
+
 
     sumPrefVal= 0
     for c in finalized_schedule:
