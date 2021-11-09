@@ -112,6 +112,7 @@ def process_students_prefs(pref_filename, course_data):
             for course in line[1:]:
                 course_id = course_data.get_id(course)
                 if course_id != -1:
+
                     interested.append(course_id)
             if len(interested) > 0:
                 students_preferences.append(interested)

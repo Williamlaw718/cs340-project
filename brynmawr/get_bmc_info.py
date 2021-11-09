@@ -41,10 +41,11 @@ def get_student_prefs_enrolled(list_of_dicts):
   student_prefs = {}
   for dict in list_of_dicts:
     student = dict["Student ID"]
+    prof = dict["Instructor ID"]
     course = dict["Course ID"]
     status = dict["Status"]
     room = dict["Facil ID 1"]
-    if status == "E" and room != "":
+    if status == "E" and room != "" and prof != "#Value!":
       if student in student_prefs:
         if course not in student_prefs[student]:
             student_prefs[student].append(course)
