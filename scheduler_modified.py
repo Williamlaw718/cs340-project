@@ -25,6 +25,9 @@ class Classes:
     def getLevel(self):
         return subject[-1]
 
+    def getSubject(self):
+        return subject[:len(self.subject)-1]
+
 
 
 def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots):
