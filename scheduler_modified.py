@@ -23,14 +23,14 @@ class Classes:
         return room in self.viableRooms
 
     def getLevel(self):
-        return self.subject[-1]
+        return int(self.subject[-1])
 
     def getSubject(self):
         return self.subject[:len(self.subject)-1]
 
 
 
-def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots, tSubjects):
+def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots, tSubjects, tLevels, numTimeslots):
 
     # we delete elements from student_pref_list, so we will only iterate if there is an available class
     for i in range(len(student_pref_list)):
@@ -40,9 +40,13 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
         #if not schedule[cur_class_id].viable(room[0]): # this makes it so we have to assign a viable class
         #    continue
 
-        if schedule[cur_class_id].getSubject() in tSubjects[timeslot]:
-            continue
+        # comment out this if statement to remove the subject constraint
+        #if schedule[cur_class_id].getSubject() in tSubjects[timeslot]:
+        #    continue
 
+        # comment out this if statement to remove the level consttraint
+        if tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1] == tLevels[0][schedule[cur_class_id].getLevel()-1]:
+            continue
 
         # if a professor is already teaching at this timeslot, move on to the next most popular class
         for pSlots in pTimeslots[schedule[cur_class_id].teacher-1]:
@@ -54,6 +58,14 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
 
             # at this timeslot append to tSubject the subject of this class
             tSubjects[timeslot].append(schedule[cur_class_id].getSubject())
+
+            # adding level of course to tLevels and if all timeeslots have reached capacity, increment respective level counter by 1
+            tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1]+= 1
+            tLevels[1][schedule[cur_class_id].getLevel()-1]+= 1
+            tLevels[0][schedule[cur_class_id].getLevel()-1]= tLevels[1][schedule[cur_class_id].getLevel()-1]%numTimeslots + 1 # if all timeslots are at capacity, increase capacity by 1
+
+
+
 
             # need to check if each student can take the course
             idx= 0
@@ -121,9 +133,18 @@ def scheduler_modified(R, T, C, S, P):
     for i in range(T):
         tSubjects.append([]) # each time we assign a class we'll update the subjects in the timeslot
 
+    # this 3D array holds the level capacities, the total amount of courses for a particular level across all timeslots, and the amount of courses for a particular level at a timeslot
+    # the first index of tLevels corresponds to the capacities (if a timeslot has less courses with that level than the capacity, then we are able to add that course)
+    # the second index is a running tally of the total number of courses with a particular level among all timeslots
+    # the third index holds the amount of courses with the same level in each timeslot
+    # NOTE: level 100 courses corresponds to index 0, level 200 courses corresponds to index 1, and level 300 courses corresponds to index 2 (in the 3D array)
+    tLevels= [[1, 1, 1], [0, 0, 0], []]
+    for i in range(T):
+        tLevels[2].append([0, 0, 0])
+
     for room in R:
         for i in range(T):
-            assignClass(room, i, classes_of_student_pref, finalized_schedule, pTimeslots, sTimeslots, tSubjects)
+            assignClass(room, i, classes_of_student_pref, finalized_schedule, pTimeslots, sTimeslots, tSubjects, tLevels, T)
 
 
 
