@@ -62,8 +62,7 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
             # adding level of course to tLevels and if all timeeslots have reached capacity, increment respective level counter by 1
             tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1]+= 1
             tLevels[1][schedule[cur_class_id].getLevel()-1]+= 1
-            tLevels[0][schedule[cur_class_id].getLevel()-1]= tLevels[1][schedule[cur_class_id].getLevel()-1]%numTimeslots + 1 # if all timeslots are at capacity, increase capacity by 1
-
+            tLevels[0][schedule[cur_class_id].getLevel()-1]= tLevels[1][schedule[cur_class_id].getLevel()-1]//numTimeslots + 1 # if all timeslots are at capacity, increase capacity by 1
 
 
 
@@ -147,18 +146,17 @@ def scheduler_modified(R, T, C, S, P):
             assignClass(room, i, classes_of_student_pref, finalized_schedule, pTimeslots, sTimeslots, tSubjects, tLevels, T)
 
 
-
     sumPrefVal= 0
     for c in finalized_schedule:
         sumPrefVal+= c.prefVal
-        print("Class ID: " + str(c.ID+1))
-        print("Subject: " + c.subject)
-        print("Room  ID: " + str(c.room))
-        print("Timeslot: " + str(c.timeslot))
-        print("Preference Value: " + str(c.prefVal))
-        print("Students: " + str(c.stu_list))
-        print("Teacher: " + str(c.teacher))
-        print()
+    #    print("Class ID: " + str(c.ID+1))
+    #    print("Subject: " + c.subject)
+    #    print("Room  ID: " + str(c.room))
+    #    print("Timeslot: " + str(c.timeslot))
+    #    print("Preference Value: " + str(c.prefVal))
+    #    print("Students: " + str(c.stu_list))
+    #    print("Teacher: " + str(c.teacher))
+    #    print()
 
     print("\nAlgo Preference Value: " + str(sumPrefVal))
     print("Best Preference Value: " + str(bestPrefVal))
