@@ -48,8 +48,8 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
             continue
 
         # comment out this if statement to remove the level consttraint
-        #if tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1] == tLevels[0][schedule[cur_class_id].getLevel()-1]:
-        #    continue
+        if tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1] == tLevels[0][schedule[cur_class_id].getLevel()-1]:
+            continue
 
         # if a professor is already teaching at this timeslot, move on to the next most popular class
         for pSlots in pTimeslots[schedule[cur_class_id].teacher-1]:
@@ -63,9 +63,9 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
             tSubjects[timeslot].append(schedule[cur_class_id].getSubject())
 
             # adding level of course to tLevels and if all timeeslots have reached capacity, increment respective level counter by 1
-            #tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1]+= 1
-            #Levels[1][schedule[cur_class_id].getLevel()-1]+= 1
-            #tLevels[0][schedule[cur_class_id].getLevel()-1]= tLevels[1][schedule[cur_class_id].getLevel()-1]//numTimeslots + 1 # if all timeslots are at capacity, increase capacity by 1
+            tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1]+= 1
+            tLevels[1][schedule[cur_class_id].getLevel()-1]+= 1
+            tLevels[0][schedule[cur_class_id].getLevel()-1]= tLevels[1][schedule[cur_class_id].getLevel()-1]//numTimeslots + 1 # if all timeslots are at capacity, increase capacity by 1
 
 
 
@@ -76,7 +76,7 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
                 for time in sTimeslots[student_pref_list[i][1][idx]]: # at most 3
                     if time == timeslot:
 
-                        print("Student " + str(student_pref_list[i][1][idx]) + " not able to take course " + str(cur_class_id))
+                        #print("Student " + str(student_pref_list[i][1][idx]) + " not able to take course " + str(cur_class_id))
                         student_pref_list[i][1].pop(idx) # remove student from the class to finalize class in schedule
 
                         break # then we do not check anymore and go onto the next student
@@ -85,9 +85,9 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
 
             # if the number of students exceed room size, then we s
             if (len(student_pref_list[i][1]) > room[1]):
-                print(room[0] + " capacity: " + str(room[1]))
-                print(str(cur_class_id) + " " + str(schedule[cur_class_id].getSubject()) + " popularity: " + str(len(student_pref_list[i][1])))
-                print(str(student_pref_list[i][1][room[1]:]) + " not able to take course " + str(cur_class_id))
+                #print(room[0] + " capacity: " + str(room[1]))
+                #print(str(cur_class_id) + " " + str(schedule[cur_class_id].getSubject()) + " popularity: " + str(len(student_pref_list[i][1])))
+                #print(str(student_pref_list[i][1][room[1]:]) + " not able to take course " + str(cur_class_id))
                 student_pref_list[i][1]= student_pref_list[i][1][:room[1]]
 
 
