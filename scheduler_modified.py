@@ -159,8 +159,8 @@ def scheduler_modified(R, T, C, S, P):
     sumPrefVal= 0
     for c in finalized_schedule:
         sumPrefVal+= c.prefVal
-        if (c.room == -1):
-            print("Did not assign class " + str(c.ID+1))
+        #if (c.room == -1):
+            #print("Did not assign class " + str(c.ID+1))
     #    print("Class ID: " + str(c.ID+1))
     #    print("Subject: " + c.subject)
     #    print("Room  ID: " + str(c.room))
