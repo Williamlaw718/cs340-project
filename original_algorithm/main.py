@@ -2,10 +2,9 @@ import re
 import os
 import sys
 import time
-from scheduler_modified import scheduler_modified
+from scheduler import scheduler
 
-convert_class_ID= {}
-def main_modified():
+def main():
 
     # this is reading the constraints
     with open(sys.argv[1], 'r') as file:
@@ -19,7 +18,7 @@ def main_modified():
 
         room_sizes= []
         for i in range(2, 2+num_rooms):
-            room_sizes.append((constraints[i].split()[0], int(constraints[i].split()[-1])))
+            room_sizes.append((i-2, int(constraints[i].split()[-1])))
 
         # remember to plus 1
         room_sizes.sort(key = lambda x : x[1], reverse = True)
@@ -30,21 +29,9 @@ def main_modified():
         # will be after classes
         num_teachers= int(constraints[3+num_rooms].split()[-1])
 
-        class_teacher_subject= [] # indices are class, values are professor teaching that class
-        cID= 1
-        pID= 1
-        convert_prof_ID = {}
+        class_to_teacher= [] # indices are class, values are professor teaching that class
         for i in range(4+num_rooms, len(constraints)):
-            if int(constraints[i].split()[1]) in convert_prof_ID: # means we have already considered this professor
-                class_teacher_subject.append([convert_prof_ID[int(constraints[i].split()[1])], constraints[i].split()[2], constraints[i].split()[3:]])
-            else: # need to add a new professor
-                class_teacher_subject.append([pID, constraints[i].split()[2], constraints[i].split()[3:]])
-                convert_prof_ID[int(constraints[i].split()[1])]= pID
-                pID+= 1
-            convert_class_ID[int(constraints[i].split()[0])] = cID
-            cID+= 1
-
-
+            class_to_teacher.append(int(constraints[i].split()[-1]))
 
 
 
@@ -55,13 +42,13 @@ def main_modified():
         for s_pref in file.readlines()[1:]:
             cur_s_pref= []
             for pref in s_pref.split()[1:]:
-                if int(pref) in convert_class_ID: # does not take into account classes with no teachers
-                    cur_s_pref.append(convert_class_ID[int(pref)])
+                cur_s_pref.append(int(pref))
             student_pref.append(cur_s_pref)
+
 
     start_time= time.time()
 
-    schedule= scheduler_modified(room_sizes, num_timeslots, num_classes, student_pref, class_teacher_subject)
+    schedule= scheduler(room_sizes, num_timeslots, num_classes, student_pref, class_to_teacher)
 
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -79,4 +66,4 @@ def main_modified():
 
 if __name__ == "__main__":
 
-    main_modified()
+    main()
