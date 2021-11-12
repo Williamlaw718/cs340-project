@@ -20,8 +20,10 @@ def main():
         for i in range(2, 2+num_rooms):
             room_sizes.append((i-2, int(constraints[i].split()[-1])))
 
+        room_sort_time= time.time()
         # remember to plus 1
         room_sizes.sort(key = lambda x : x[1], reverse = True)
+        room_sort_time= room_sort_time - time.time()
 
         # after end of room and their sizes
         num_classes= int(constraints[2+num_rooms].split()[-1])
@@ -50,7 +52,7 @@ def main():
 
     schedule= scheduler(room_sizes, num_timeslots, num_classes, student_pref, class_to_teacher)
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time.time() - start_time + room_sort_time))
 
     with open(sys.argv[3], 'w') as file:
         file.write("{}\t{}\t{}\t{}\t{}\n".format("Course", "Room", "Teacher", "Time", "Students"))
