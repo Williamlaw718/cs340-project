@@ -1,23 +1,32 @@
-
+import random
 
 class Classes:
 
-    def __init__(self, ID, teacher, subject, viableRooms):
+    def __init__(self, ID, teacher, subject):
         self.ID= ID
         self.teacher= teacher
         self.timeslot= -1
         self.room= -1
-        self.prefVal= 0
-        self.stu_list= 0
+        self.roomCap= -1
+        self.stu_list= []
         self.subject= subject
-        self.viableRooms= viableRooms # a list of rooms that this class can be put in
 
     def assignStudents(self, stu_list, timeslot, roomName):
         self.stu_list= stu_list # need to add 1 to the students when we print out the statement
-        self.prefVal= len(stu_list)
         self.timeslot= timeslot+1
         self.room= roomName
         # once we assign this, we will never reassign because greedy
+
+    def assignRoomTime(self, timeslot, room):
+        self.room= room[0]
+        self.roomCap= room[1]
+        self.timeslot= timeslot+1
+
+    def addStudent(self, student):
+        self.stu_list.append(student)
+
+    def getTeacher(self):
+        return self.teacher
 
     def viable(self, room):
         return room in self.viableRooms
@@ -28,58 +37,11 @@ class Classes:
     def getSubject(self):
         return self.subject[:len(self.subject)-1]
 
+    def getTimeslot(self):
+        return self.timeslot
 
-def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots):
-
-    # we delete elements from student_pref_list, so we will only iterate if there is an available class
-    for i in range(len(student_pref_list)):
-        cur_class_id= student_pref_list[i][0]
-
-        # if a professor is already teaching at this timeslot, move on to the next most popular class
-        for pSlots in pTimeslots[schedule[cur_class_id].teacher-1]:
-            if pSlots == timeslot:
-                break
-        else:
-            # if the professor passes, then we assign the class to the timeslot and room
-            pTimeslots[schedule[cur_class_id].teacher-1].append(timeslot)
-
-            # need to check if each student can take the course
-            idx= 0
-            for j in range(len(student_pref_list[i][1])):
-
-                for time in sTimeslots[student_pref_list[i][1][idx]]: # at most 3
-                    if time == timeslot:
-
-                        #print("Student " + str(student_pref_list[i][1][idx]) + " not able to take course " + str(cur_class_id))
-                        student_pref_list[i][1].pop(idx) # remove student from the class to finalize class in schedule
-
-                        break # then we do not check anymore and go onto the next student
-                else:
-                    idx+= 1
-
-            # if the number of students exceed room size, then we s
-            if (len(student_pref_list[i][1]) > room[1]):
-                #print(room[0] + " capacity: " + str(room[1]))
-                #print(str(cur_class_id) + " " + str(schedule[cur_class_id].getSubject()) + " popularity: " + str(len(student_pref_list[i][1])))
-                #print(str(student_pref_list[i][1][room[1]:]) + " not able to take course " + str(cur_class_id))
-                student_pref_list[i][1]= student_pref_list[i][1][:room[1]]
-
-
-            # adds this timeslot to the student's schedule at student_pref_list[i][1][j]
-            for j in range(len(student_pref_list[i][1])):
-                sTimeslots[student_pref_list[i][1][j]].append(timeslot)
-                student_pref_list[i][1][j]+= 1
-
-
-            schedule[cur_class_id].assignStudents(student_pref_list[i][1], timeslot, room[0])
-
-            student_pref_list.pop(i)
-
-            return
-
-    return
-
-
+    def isAtRoomCap(self): # or greater when room and roomcap is not assigned
+        return len(self.stu_list) >= self.roomCap
 
 
 # R is room_sizes
@@ -89,23 +51,18 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
 # P is class_to_teacher
 def scheduler_constraint5(R, T, C, S, P):
     finalized_schedule= []
-    classes_of_student_pref= []
     for i in range(C):
         finalized_schedule.append(Classes(i, P[i][0], P[i][1]))
-        classes_of_student_pref.append([i, []]) # this creates an id for each class before we sort based on preference population
 
-    bestPrefVal= 0
-    for i in range(len(S)):
-        for c in S[i]:
-            classes_of_student_pref[c-1][1].append(i)
-            bestPrefVal+= 1
+    working_schedule= finalized_schedule.copy()
 
-    classes_of_student_pref.sort(key= lambda x: len(x[1]), reverse = True)
+    working_schedule.sort(key = lambda x: x.getLevel())
 
     # list of professors and the timeslots they were already assigned
     pTimeslots= []
     for i in range(len(P)):
         pTimeslots.append([])
+
     # list of students and the timeslots they were already assigned
     sTimeslots= []
     for i in range(len(S)):
@@ -113,22 +70,42 @@ def scheduler_constraint5(R, T, C, S, P):
 
     for room in R:
         for i in range(T):
-            assignClass(room, i, classes_of_student_pref, finalized_schedule, pTimeslots, sTimeslots, tSubjects, tLevels, T)
+            for c in range(len(working_schedule)):
+                if i in pTimeslots[working_schedule[c].getTeacher()-1]:
+                    continue
+
+                working_schedule[c].assignRoomTime(i, room)
+                pTimeslots[working_schedule[c].getTeacher()-1].append(i)
+                working_schedule.pop(c)
+                break
 
 
+    bestPrefVal= 0
     sumPrefVal= 0
+    rand_order= list(range(len(S)))
+    random.shuffle(rand_order)
+    for i in rand_order:
+        for c in S[i]:
+            if finalized_schedule[c-1].getTimeslot() != -1 and finalized_schedule[c-1].getTimeslot() not in sTimeslots[i] and not finalized_schedule[c-1].isAtRoomCap():
+                print("hi")
+                finalized_schedule[c-1].addStudent(i+1)
+                sTimeslots[i].append(finalized_schedule[c-1].getTimeslot())
+                sumPrefVal+= 1
+
+            bestPrefVal+= 1
+
+
     for c in finalized_schedule:
-        sumPrefVal+= c.prefVal
-        #if (c.room == -1):
-            #print("Did not assign class " + str(c.ID+1))
-    #    print("Class ID: " + str(c.ID+1))
-    #    print("Subject: " + c.subject)
-    #    print("Room  ID: " + str(c.room))
-    #    print("Timeslot: " + str(c.timeslot))
-    #    print("Preference Value: " + str(c.prefVal))
-    #    print("Students: " + str(c.stu_list))
-    #    print("Teacher: " + str(c.teacher))
-    #    print()
+        if (c.room == -1):
+            print("Did not assign class " + str(c.ID+1))
+        print("Class ID: " + str(c.ID+1))
+        print("Subject: " + c.subject)
+        print("Room  ID: " + str(c.room))
+        print("Timeslot: " + str(c.timeslot))
+        print("Preference Value: " + str(c.prefVal))
+        print("Students: " + str(c.stu_list))
+        print("Teacher: " + str(c.teacher))
+        print()
 
     print("\nAlgo Preference Value: " + str(sumPrefVal))
     print("Best Preference Value: " + str(bestPrefVal))

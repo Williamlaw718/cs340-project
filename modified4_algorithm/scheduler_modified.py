@@ -30,8 +30,8 @@ class Classes:
 
 
 # comment out lines 41 and 42 to remove the room constraint
-# comment out lines 47, 48, 62 to remove subject constraint
-# comment out lines 51, 52, 66, 67, 68 to remove level constraint
+# comment out lines 47, 48, 63, 64, 65 to remove subject constraint
+# comment out lines 51, 52, 68, 69, 70 to remove level constraint
 
 def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimeslots, tSubjects, tLevels, numTimeslots):
 
@@ -142,6 +142,9 @@ def scheduler_modified(R, T, C, S, P):
     for i in range(len(S)):
         sTimeslots.append([])
 
+    # 0 index of tSubjects corresponds to subject capacities
+    # 1 index of tSubjects corresponds to total courses for a particular subject
+    # 2 index of tSubjects corresponds to the number of courses for a particular subject at a timeslot
     # comment this out to remove timeslot constraint
     subject_capacities= {}
     for key in tally_subjects:
