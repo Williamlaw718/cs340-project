@@ -86,13 +86,16 @@ def scheduler_constraint5(R, T, C, S, P):
     random.shuffle(rand_order)
     #numStuConflict= 0
     #numRoomCapConflict= 0
+    #stu_order_pref= [] # will keep track of how many preferred classes a student got by order in which they registered
     for i in rand_order:
+        exp_pref= 0
         for c in S[i]:
             if finalized_schedule[c-1].getTimeslot() != -1 and finalized_schedule[c-1].getTimeslot() not in sTimeslots[i] and not finalized_schedule[c-1].isAtRoomCap():
                 finalized_schedule[c-1].addStudent(i+1)
                 sTimeslots[i].append(finalized_schedule[c-1].getTimeslot())
                 sumPrefVal+= 1
-            else:
+                #exp_pref+= 1
+            #else:
                 #reason= "Student " + str(i+1) + " could not register for course " + str(c)
                 #if finalized_schedule[c-1].getTimeslot() in sTimeslots[i]:
                 #    reason = reason + " b/c student timeslot conflict "
@@ -102,7 +105,8 @@ def scheduler_constraint5(R, T, C, S, P):
                 #    numRoomCapConflict+= 1
                 #print(reason)
             bestPrefVal+= 1
-
+        #stu_order_pref.append((exp_pref, len(S[i]))) # index i of stu_order_pref represents when they registered and the first index of the tuple represents how mnany
+        #preferred classes the student got and the second index of the tuple represents the total number of preferred classes they got
 
     for c in finalized_schedule:
         if (c.room == -1):
@@ -113,8 +117,9 @@ def scheduler_constraint5(R, T, C, S, P):
         #print("Timeslot: " + str(c.timeslot))
         #print("Students: " + str(c.stu_list))
         #print("Teacher: " + str(c.teacher))
-    #print()
+    print()
 
+    print(stu_order_pref)
     #print("Number of Student Timeslot Conflict: " + str(numStuConflict))
     #print("Number of Room Cap Conflict: " + str(numRoomCapConflict))
 
