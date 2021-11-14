@@ -44,10 +44,10 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
         #    continue
 
         # comment out this if statement to remove the subject constraint
-        if tSubjects[2][timeslot][schedule[cur_class_id].getSubject()] == tSubjects[0][schedule[cur_class_id].getSubject()]:
-            continue
+        #if tSubjects[2][timeslot][schedule[cur_class_id].getSubject()] == tSubjects[0][schedule[cur_class_id].getSubject()]:
+        #    continue
 
-        # comment out this if statement to remove the level consttraint
+        # comment out this if statement to remove the level constraint
         if tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1] == tLevels[0][schedule[cur_class_id].getLevel()-1]:
             continue
 
@@ -60,9 +60,9 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
             pTimeslots[schedule[cur_class_id].teacher-1].append(timeslot)
 
             # at this timeslot append to tSubject the subject of this class
-            tSubjects[2][timeslot][schedule[cur_class_id].getSubject()]+= 1
-            tSubjects[1][schedule[cur_class_id].getSubject()]+= 1
-            tSubjects[0][schedule[cur_class_id].getSubject()]= tSubjects[1][schedule[cur_class_id].getSubject()]//numTimeslots + 1 # if all timeslots at subject capacity, increase cap by 1
+            #tSubjects[2][timeslot][schedule[cur_class_id].getSubject()]+= 1
+            #tSubjects[1][schedule[cur_class_id].getSubject()]+= 1
+            #tSubjects[0][schedule[cur_class_id].getSubject()]= tSubjects[1][schedule[cur_class_id].getSubject()]//numTimeslots + 1 # if all timeslots at subject capacity, increase cap by 1
 
             # adding level of course to tLevels and if all timeeslots have reached capacity, increment respective level counter by 1
             tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1]+= 1
@@ -85,7 +85,7 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
                 else:
                     idx+= 1
 
-            # if the number of students exceed room size, then we s
+            # if the number of students exceed room size, then we slice the list of students to that size
             if (len(student_pref_list[i][1]) > room[1]):
                 #print(room[0] + " capacity: " + str(room[1]))
                 #print(str(cur_class_id) + " " + str(schedule[cur_class_id].getSubject()) + " popularity: " + str(len(student_pref_list[i][1])))
