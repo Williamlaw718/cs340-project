@@ -87,7 +87,6 @@ def scheduler_constraint5(R, T, C, S, P):
     for i in rand_order:
         for c in S[i]:
             if finalized_schedule[c-1].getTimeslot() != -1 and finalized_schedule[c-1].getTimeslot() not in sTimeslots[i] and not finalized_schedule[c-1].isAtRoomCap():
-                print("hi")
                 finalized_schedule[c-1].addStudent(i+1)
                 sTimeslots[i].append(finalized_schedule[c-1].getTimeslot())
                 sumPrefVal+= 1
@@ -102,7 +101,6 @@ def scheduler_constraint5(R, T, C, S, P):
         print("Subject: " + c.subject)
         print("Room  ID: " + str(c.room))
         print("Timeslot: " + str(c.timeslot))
-        print("Preference Value: " + str(c.prefVal))
         print("Students: " + str(c.stu_list))
         print("Teacher: " + str(c.teacher))
         print()
