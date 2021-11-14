@@ -84,26 +84,39 @@ def scheduler_constraint5(R, T, C, S, P):
     sumPrefVal= 0
     rand_order= list(range(len(S)))
     random.shuffle(rand_order)
+    #numStuConflict= 0
+    #numRoomCapConflict= 0
     for i in rand_order:
         for c in S[i]:
             if finalized_schedule[c-1].getTimeslot() != -1 and finalized_schedule[c-1].getTimeslot() not in sTimeslots[i] and not finalized_schedule[c-1].isAtRoomCap():
                 finalized_schedule[c-1].addStudent(i+1)
                 sTimeslots[i].append(finalized_schedule[c-1].getTimeslot())
                 sumPrefVal+= 1
-
+            else:
+                #reason= "Student " + str(i+1) + " could not register for course " + str(c)
+                #if finalized_schedule[c-1].getTimeslot() in sTimeslots[i]:
+                #    reason = reason + " b/c student timeslot conflict "
+                #    numStuConflict+= 1
+                #if finalized_schedule[c-1].isAtRoomCap():
+                #    reason = reason + " b/c of room cap conflict"
+                #    numRoomCapConflict+= 1
+                #print(reason)
             bestPrefVal+= 1
 
 
     for c in finalized_schedule:
         if (c.room == -1):
             print("Did not assign class " + str(c.ID+1))
-        print("Class ID: " + str(c.ID+1))
-        print("Subject: " + c.subject)
-        print("Room  ID: " + str(c.room))
-        print("Timeslot: " + str(c.timeslot))
-        print("Students: " + str(c.stu_list))
-        print("Teacher: " + str(c.teacher))
-        print()
+        #print("Class ID: " + str(c.ID+1))
+        #print("Level: " + str(c.getLevel()))
+        #print("Room  ID: " + str(c.room))
+        #print("Timeslot: " + str(c.timeslot))
+        #print("Students: " + str(c.stu_list))
+        #print("Teacher: " + str(c.teacher))
+    #print()
+
+    #print("Number of Student Timeslot Conflict: " + str(numStuConflict))
+    #print("Number of Room Cap Conflict: " + str(numRoomCapConflict))
 
     print("\nAlgo Preference Value: " + str(sumPrefVal))
     print("Best Preference Value: " + str(bestPrefVal))
