@@ -28,7 +28,6 @@ class Classes:
     def getSubject(self):
         return self.subject[:len(self.subject)-1]
 
-
 # comment out lines 41 and 42 to remove the room constraint
 # comment out lines 47, 48, 63, 64, 65 to remove subject constraint
 # comment out lines 51, 52, 68, 69, 70 to remove level constraint
@@ -40,12 +39,13 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
         cur_class_id= student_pref_list[i][0]
 
         # comment out this if statement to remove room constraint
-        #if not schedule[cur_class_id].viable(room[0]): # this makes it so we have to assign a viable class
-        #    continue
+        if not schedule[cur_class_id].viable(room[0]): # this makes it so we have to assign a viable class
+            continue
+
 
         # comment out this if statement to remove the subject constraint
-        #if tSubjects[2][timeslot][schedule[cur_class_id].getSubject()] == tSubjects[0][schedule[cur_class_id].getSubject()]:
-        #    continue
+        if tSubjects[2][timeslot][schedule[cur_class_id].getSubject()] == tSubjects[0][schedule[cur_class_id].getSubject()]:
+            continue
 
         # comment out this if statement to remove the level constraint
         if tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1] == tLevels[0][schedule[cur_class_id].getLevel()-1]:
@@ -59,12 +59,12 @@ def assignClass(room, timeslot, student_pref_list, schedule, pTimeslots, sTimesl
             # if the professor passes, then we assign the class to the timeslot and room
             pTimeslots[schedule[cur_class_id].teacher-1].append(timeslot)
 
-            # at this timeslot append to tSubject the subject of this class
-            #tSubjects[2][timeslot][schedule[cur_class_id].getSubject()]+= 1
-            #tSubjects[1][schedule[cur_class_id].getSubject()]+= 1
-            #tSubjects[0][schedule[cur_class_id].getSubject()]= tSubjects[1][schedule[cur_class_id].getSubject()]//numTimeslots + 1 # if all timeslots at subject capacity, increase cap by 1
+            # at this timeslot append to tSubject the subject of this class, comment this out to remove subject constraint
+            tSubjects[2][timeslot][schedule[cur_class_id].getSubject()]+= 1
+            tSubjects[1][schedule[cur_class_id].getSubject()]+= 1
+            tSubjects[0][schedule[cur_class_id].getSubject()]= tSubjects[1][schedule[cur_class_id].getSubject()]//numTimeslots + 1 # if all timeslots at subject capacity, increase cap by 1
 
-            # adding level of course to tLevels and if all timeeslots have reached capacity, increment respective level counter by 1
+            # adding level of course to tLevels and if all timeeslots have reached capacity, increment respective level counter by 1, comment this out to remove level constraint
             tLevels[2][timeslot][schedule[cur_class_id].getLevel()-1]+= 1
             tLevels[1][schedule[cur_class_id].getLevel()-1]+= 1
             tLevels[0][schedule[cur_class_id].getLevel()-1]= tLevels[1][schedule[cur_class_id].getLevel()-1]//numTimeslots + 1 # if all timeslots are at capacity, increase capacity by 1
