@@ -4,6 +4,8 @@ Looking at the code in scheduler_modified.py, we are able to comment out the lin
 
 For extension 4, the modification is not done in the algorithm, but rather in the parsing step of obtaining the constraint and student preferences input files. Use get_bmc_info_up_size.py to get the new constraint and preferences, so that you can run the modified algorithm on those new input files.
 
+NOTE: all extensions are enabled at the start
+
 
 ## Run Command
 
