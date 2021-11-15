@@ -5,3 +5,5 @@ These tests are for varying class sizes while keeping all other variables consta
 3000 Students
 
 1k to 10k classes (1k intervals)
+
+We measured the optimality score as the number of classes grew, but we saw little to no change to our score.

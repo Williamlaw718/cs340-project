@@ -1,0 +1,12 @@
+Class Times	1
+Rooms	4
+1	159
+2	169
+3	321
+4	558
+Classes	4
+Teachers	2
+1	2
+2	2
+3	1
+4	1
