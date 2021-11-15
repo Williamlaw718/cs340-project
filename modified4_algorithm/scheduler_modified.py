@@ -28,7 +28,7 @@ class Classes:
     def getSubject(self):
         return self.subject[:len(self.subject)-1]
 
-# comment out lines 41 and 42 to remove the room constraint
+# comment out lines 42 and 43 to remove the room constraint
 # comment out lines 47, 48, 63, 64, 65 to remove subject constraint
 # comment out lines 51, 52, 68, 69, 70 to remove level constraint
 
